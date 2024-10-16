@@ -138,28 +138,28 @@ app.get('/encounter', async (req, res) => {
 })
 
 app.post('/catch', async (req, res) => {
-  const { pokemon } = req.body
+  const { pokemon } = req.body;
   if (!pokemon) {
-    return res.status(400).json({ success: false, message: 'No Pokémon specified.' })
+    return res.status(400).json({ success: false, message: 'No Pokémon specified.' });
   }
-
-  const catchSuccess = Math.random() < 0.5
+  const catchSuccess = Math.random() < 0.45;
   if (catchSuccess) {
     try {
-      const existingPokemon = await CaughtPokemonModel.findOne({ name: pokemon.name })
+      const existingPokemon = await CaughtPokemonModel.findOne({ name: pokemon.name });
       if (existingPokemon) {
-        return res.json({ success: false, message: `${pokemon.name} is already caught.` })
+        return res.json({ success: false, message: `${pokemon.name} is already caught.` });
       }
-      await CaughtPokemonModel.insertMany(pokemon)
-      res.json({ success: true, message: `You caught ${pokemon.name}!` })
+      await CaughtPokemonModel.insertMany(pokemon);
+      res.json({ success: true, message: `You caught ${pokemon.name}!` });
     } catch (error) {
-      console.error(`Error saving caught Pokémon: ${error.message}`)
-      res.status(500).json({ error: `Error saving caught Pokémon: ${error.message}` })
+      console.error(`Error saving caught Pokémon: ${error.message}`);
+      res.status(500).json({ error: `Error saving caught Pokémon: ${error.message}` });
     }
   } else {
-    res.json({ success: false, message: `Failed to catch ${pokemon.name}.` })
+    res.json({ success: false, message: `Failed to catch ${pokemon.name}.` });
   }
 })
+
 app.get('/caught', async (req, res) => {
   const page = Number(req.query.page) || 1
   const limit = Number(req.query.limit) || 2

@@ -53,7 +53,7 @@ const OfficialBattle: React.FC = () => {
     if (EnemyHP > 0 && !Caught) {
       setAttemptedCatch(true)
       const CatchChance = Math.random()
-      const SuccessRate = 0.5
+      const SuccessRate = 0.45
       if (CatchChance < SuccessRate) {
         setCaught(true)
         setBattleLog((prev) => [...prev, `You've successfully caught ${EnemyData?.name}`])
@@ -98,6 +98,18 @@ const OfficialBattle: React.FC = () => {
     navigate('/')
   }
 
+  const HPBar = ({ currentHP, maxHP }: { currentHP: number, maxHP: number }) => {
+    const hpPercentage = (currentHP / maxHP) * 100
+    return (
+      <div className="w-full bg-gray-200 rounded-full h-4">
+        <div
+          className="bg-green-500 h-4 rounded-full"
+          style={{ width: `${hpPercentage}%` }}
+        ></div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-blue-700 p-4 relative">
       <div className="bg-black/50 max-w-lg mx-auto p-4 rounded-lg backdrop-blur-sm text-center flex flex-col">
@@ -113,13 +125,15 @@ const OfficialBattle: React.FC = () => {
             <h2 className="text-lg font-semibold">Your Pokémon: {selectedPokemon.name}</h2>
             <img src={selectedPokemon.sprites} alt={`${selectedPokemon.name} sprite`} className="w-24 h-24 mx-auto mb-2" />
             <strong className="block text-md text-gray-600 mb-1">Health:</strong>
-            <p>{YourHP}</p>
+            <HPBar currentHP={YourHP} maxHP={selectedPokemon.health} />
+            <p>{YourHP} / {selectedPokemon.health}</p>
           </div>
           <div className="bg-red-300 p-4 rounded-lg w-1/2 mx-2">
             <h2 className="text-lg font-semibold">Enemy Pokémon: {EnemyData?.name}</h2>
             {EnemyData && <img src={EnemyData.sprites} alt={`${EnemyData.name} sprite`} className="w-24 h-24 mx-auto mb-2" />}
             <strong className="block text-md text-gray-600 mb-1">Health:</strong>
-            <p>{EnemyHP}</p>
+            {EnemyData && <HPBar currentHP={EnemyHP} maxHP={EnemyData.health} />}
+            <p>{EnemyHP} / {EnemyData?.health}</p>
           </div>
         </div>
         {battleStarted && EnemyData && (
