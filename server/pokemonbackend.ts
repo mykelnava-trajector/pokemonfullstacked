@@ -13,11 +13,12 @@ app.use(express.json())
 
 app.listen(port, () => {
   connectToDB(process.env.MONGO_URI || "").then(() => {
-    console.log("Connected to ", process.env.MONGO_URI || "")
+    console.log("Connected to Database")
   })
   console.log("Server is up @ " + port)
 })
 
+//Generates random pokemon
 app.get(`/getyourpokemon`, async (req, res) => {
   try {
     let yourPokemonRandom: Pokemon[] = []
@@ -55,6 +56,8 @@ app.get(`/getyourpokemon`, async (req, res) => {
     res.status(400).json({ message: `Error fetching Pokémon: ${error.message}` })
   }
 })
+
+//Save Selected Pokemon
 app.post('/savepokemon', async (req, res) => {
   try {
     const selectedPokemon = req.body
@@ -71,7 +74,7 @@ app.post('/savepokemon', async (req, res) => {
     res.status(400).json({ message: `Error saving Pokémon: ${error.message}` })
   }
 })
-
+//Checks if there's a saved pokemon in database
 app.get(`/checkpokemon`, async (req, res) => {
   try {
     const existingPokemon = await PokemonModel.findOne()
@@ -85,6 +88,7 @@ app.get(`/checkpokemon`, async (req, res) => {
     res.status(400).json({ message: `Error checking Pokémon: ${error.message}` })
   }
 })
+//Deletes the pokemon saved in database
 app.delete('/deletepokemon', async (req, res) => {
   try {
     const { name } = req.body
@@ -96,7 +100,7 @@ app.delete('/deletepokemon', async (req, res) => {
   }
 })
 
-
+//Get location-area and random pokemon in location area.
 app.get('/encounter', async (req, res) => {
   try {
     const locationArea = 'https://pokeapi.co/api/v2/location-area/168/'
@@ -136,7 +140,7 @@ app.get('/encounter', async (req, res) => {
     res.status(500).json({ error: `Failed to fetch encounter: ${error.message}` })
   }
 })
-
+//Catch and place catched pokemon into database
 app.post('/catch', async (req, res) => {
   const { pokemon } = req.body
   if (!pokemon) {
@@ -159,14 +163,14 @@ app.post('/catch', async (req, res) => {
     res.json({ success: false, message: `Failed to catch ${pokemon.name}.` })
   }
 })
-
+//To display caught pokemon and use pagination
 app.get('/caught', async (req, res) => {
-  const page = Number(req.query.page) || 1
-  const limit = Number(req.query.limit) || 2
-  const skip = (page - 1) * limit
+  const page = Number(req.query.page) || 1 //Page number
+  const limit = Number(req.query.limit) || 2 //How many pokemons in a page
+  const skip = (page - 1) * limit //Picks only 2 pokemons from the database
 
   try {
-    const caughtPokemon = await CaughtPokemonModel.find().skip(skip).limit(limit)
+    const caughtPokemon = await CaughtPokemonModel.find().skip(skip).limit(limit) //Shuffles through database by 2.
     const total = await CaughtPokemonModel.countDocuments()
     const totalPages = Math.ceil(total / limit)
 
