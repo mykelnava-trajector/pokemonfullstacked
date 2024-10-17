@@ -4,16 +4,9 @@ const StartScreen: React.FC = () => {
   const navigate = useNavigate()
   useEffect(() => {
     const pokemonMusic = new Audio('/music/pokemon-theme.mp3')
-    pokemonMusic.loop = false
+    pokemonMusic.loop = true 
+    pokemonMusic.play()
     pokemonMusic.volume = 0.3
-    
-    const playMusic = () => {
-      pokemonMusic.currentTime = 0
-      pokemonMusic.play()
-    }
-  
-    playMusic()
-  
     return () => {
       pokemonMusic.pause()
       pokemonMusic.currentTime = 0
