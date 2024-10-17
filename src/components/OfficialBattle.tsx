@@ -14,6 +14,19 @@ const OfficialBattle: React.FC = () => {
   const [Caught, setCaught] = useState<boolean>(false)
   const [battleStarted, setBattleStarted] = useState<boolean>(false)
   const [attemptedCatch, setAttemptedCatch] = useState<boolean>(false)
+  useEffect(() => {
+    if(battleStarted){
+      const pokemonMusic = new Audio('/music/pokemon-fight.mp3')
+    pokemonMusic.loop = true 
+    pokemonMusic.play()
+    pokemonMusic.volume = 0.3
+  
+    return () => {
+      pokemonMusic.pause()
+      pokemonMusic.currentTime = 0 
+    }
+    }
+  }, [battleStarted])
 
   const handleSearchEnemy = async () => {
     try {

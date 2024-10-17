@@ -10,7 +10,14 @@ const ChoosePokemon: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [hasPokemon, setHasPokemon] = useState<boolean>(false)
   const navigate = useNavigate()
-
+  useEffect(()=>{
+    const pokemonmusic = new Audio(`/music/who's-that-pokemon.mp3`)
+    pokemonmusic.play()
+    return() =>{
+      pokemonmusic.pause()
+      pokemonmusic.currentTime = 0
+    }
+  })
   useEffect(() => {
     const checkExistingPokemon = async () => {
       try {

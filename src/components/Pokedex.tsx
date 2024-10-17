@@ -22,7 +22,15 @@ const Pokedex: React.FC = () => {
       console.error('Error fetching caught Pokémon:', error)
     }
   }
-
+  useEffect(()=>{
+    const pokemonmusic = new Audio(`/music/pokemon-out.mp3`)
+    pokemonmusic.play()
+    pokemonmusic.volume = 0.3
+    return() =>{
+      pokemonmusic.pause()
+      pokemonmusic.currentTime = 0
+    }
+  })
   useEffect(() => {
     fetchCaughtPokemon(currentPage)
   }, [currentPage])

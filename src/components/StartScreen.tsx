@@ -1,8 +1,18 @@
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 const StartScreen: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  useEffect(() => {
+    const pokemonMusic = new Audio('/music/pokemon-theme.mp3')
+    pokemonMusic.loop = true 
+    pokemonMusic.play()
+    pokemonMusic.volume = 0.3
   
+    return () => {
+      pokemonMusic.pause()
+      pokemonMusic.currentTime = 0
+    }
+  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen 
